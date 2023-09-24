@@ -4,9 +4,10 @@
 
 "use client";
 
-import SidebarItem from "./sidebar-item";
+import { usePathname } from "next/navigation";
+import { BarChart, Compass, Layout, List, MessagesSquare } from "lucide-react";
 
-import { Compass, Layout, MessagesSquare } from "lucide-react";
+import SidebarItem from "./sidebar-item";
 
 const guestRoutes = [
   {
@@ -24,10 +25,26 @@ const guestRoutes = [
     label: "Discussions",
     href: "/discussions"
   },
-]
+];
+
+const adminRoutes = [
+  {
+    icon: List,
+    label: "Courses",
+    href: "/admin/courses",
+  },
+  {
+    icon: BarChart,
+    label: "Analytics",
+    href: "/admin/analytics",
+  },
+];
 
 const SidebarRoutes = () => {
-  const routes = guestRoutes;
+  const pathname = usePathname();
+  const isAdminPage = pathname?.startsWith("/admin");
+
+  const routes = isAdminPage ? adminRoutes : guestRoutes;
 
   return (
     <div className="flex flex-col w-full">
