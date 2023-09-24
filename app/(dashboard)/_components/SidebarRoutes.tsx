@@ -6,7 +6,7 @@
 
 import SidebarItem from "./SidebarItem";
 
-import { Compass, Layout } from "lucide-react";
+import { Compass, Layout, MessagesSquare } from "lucide-react";
 
 const guestRoutes = [
   {
@@ -18,6 +18,11 @@ const guestRoutes = [
     icon: Compass,
     label: "Browse",
     href: "/search",
+  },
+  {
+    icon: MessagesSquare,
+    label: "Discussions",
+    href: "/discussions"
   },
 ]
 
