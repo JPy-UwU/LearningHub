@@ -1,3 +1,4 @@
+import SidebarRoutes from "./SidebarRoutes";
 import Logo from "./Logo";
 
 const Sidebar = () => {
@@ -6,7 +7,9 @@ const Sidebar = () => {
       <div className="p-6">
         <Logo />
       </div>
-      Sidebar
+      <div className="flex flex-col w-full">
+        <SidebarRoutes />
+      </div>
     </div>
   );
 }
