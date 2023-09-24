@@ -1,8 +1,12 @@
+/**
+ * SidebarRoutes component contains api route, icon and label for each SidebarItem.
+ */
+
 "use client";
 
 import SidebarItem from "./SidebarItem";
 
-import { Compass, Layout, icons } from "lucide-react";
+import { Compass, Layout } from "lucide-react";
 
 const guestRoutes = [
   {

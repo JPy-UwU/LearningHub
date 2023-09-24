@@ -1,3 +1,7 @@
+/**
+ * sidebar component containing a Logo and SidebarRoutes
+ */
+
 import SidebarRoutes from "./SidebarRoutes";
 import Logo from "./Logo";
 

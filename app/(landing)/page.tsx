@@ -1,3 +1,9 @@
+/**
+ * Route: /
+ * Description: A landing page for the website, contanins sign-up and sign-in links
+ */
+
+
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
