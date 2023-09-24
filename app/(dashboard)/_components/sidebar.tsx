@@ -2,8 +2,8 @@
  * sidebar component containing a Logo and SidebarRoutes
  */
 
-import SidebarRoutes from "./SidebarRoutes";
-import Logo from "./Logo";
+import SidebarRoutes from "./sidebar-routes";
+import Logo from "./logo";
 
 const Sidebar = () => {
   return (

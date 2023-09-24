@@ -4,7 +4,7 @@
 
 "use client";
 
-import SidebarItem from "./SidebarItem";
+import SidebarItem from "./sidebar-item";
 
 import { Compass, Layout, MessagesSquare } from "lucide-react";
 
