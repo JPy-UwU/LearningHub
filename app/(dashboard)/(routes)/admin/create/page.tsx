@@ -26,6 +26,8 @@ const formSchema = z.object({
 });
 
 const CreatePage = () => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,8 +37,13 @@ const CreatePage = () => {
 
   const { isSubmitting, isValid } = form.formState;
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => { 
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => { 
+    try {
+      const response = await axios.post("/admin/courses", values);
+      router.push(`/admin/courses/${response.data.id}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
