@@ -4,8 +4,9 @@ import { z } from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 import {
   Form,
@@ -42,7 +43,7 @@ const CreatePage = () => {
       const response = await axios.post("/admin/courses", values);
       router.push(`/admin/courses/${response.data.id}`);
     } catch (error) {
-      console.log(error);
+      toast.error("Something went wrong");
     }
   };
 
