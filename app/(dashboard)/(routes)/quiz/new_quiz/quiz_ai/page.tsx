@@ -1,6 +1,6 @@
 import React from 'react';
 
-const QuizFromAIPage: React.FC = () => {
+const QuizFromAIPage = () => {
     return (
         <div>
             <h1>Quiz from AI</h1>

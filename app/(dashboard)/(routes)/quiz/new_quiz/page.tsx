@@ -28,7 +28,7 @@ const formSchema = z.object({
 });
 
 
-const StartQuizPage: React.FC = () => {
+const StartQuizPage = () => {
     const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -76,7 +76,7 @@ const StartQuizPage: React.FC = () => {
                         <FormItem>
                         <FormLabel>Number of Questions</FormLabel>
                         <FormControl>
-                        <Input type="number" disabled={isSubmitting}placeholder="e.g. '20'"{...field}/>
+                        <Input type="number" disabled={isSubmitting} placeholder="e.g. '20'"{...field}/>
                         </FormControl>
                         </FormItem>)}/>
               <FormDescription>Do not worry!</FormDescription>
@@ -92,7 +92,7 @@ const StartQuizPage: React.FC = () => {
                 </Link>
                   <Button
                   type="submit" 
-                  disabled= {isSubmitting||!isValid}
+                  // disabled= {isSubmitting || !isValid}
                   >
                   Continue
                   </Button>
