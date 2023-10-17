@@ -1,108 +1,201 @@
 "use client";
-
+import React from "react";
 import { z } from "zod";
-import axios from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import toast from "react-hot-toast";
-
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormLabel,
   FormDescription,
   FormField,
-  FormMessage,
   FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
+import { BookOpen, CopyCheck } from "lucide-react";
+import axios, { AxiosError } from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import LoadingQuestions from "./LoadingQuestions";
 
-const formSchema = z.object({
-  title:z.string().min(1,{
-    message: "A topic is required", }),
-    numberOfQuestions:z.number().int().min(1).max(10, {
-      message: "number of questions is required",}),
+
+type Props = {
+  topic: string;
+};
+
+
+
+export const quizCreationSchema = z.object({
+  topic: z
+    .string()
+    .min(4, {
+      message: "Topic must be at least 4 characters long",
+    })
+    .max(50, {
+      message: "Topic must be at most 50 characters long",
+    }),
+  type: z.enum(["mcq", "open_ended"]),
+  amount: z.number().min(1).max(10),
 });
 
 
-const StartQuizPage = () => {
-    const router = useRouter();
+type Input = z.infer<typeof quizCreationSchema>;
 
-    const form = useForm<z.infer<typeof formSchema>>({
-      resolver: zodResolver(formSchema),
+const QuizCreation = ({ topic: topicParam }: Props) => {
+  const router = useRouter();
+  const [showLoader, setShowLoader] = React.useState(false);
+  const [finishedLoading, setFinishedLoading] = React.useState(false);
+  const { toast } = useToast();
+  const { mutate: getQuestions, isLoading } = useMutation({
+    mutationFn: async ({ amount, topic, type }: Input) => {
+      const response = await axios.post("/api/game", { amount, topic, type });
+      return response.data;
+    },
+  });
 
-      defaultValues: {
-        title: "",
-        
-        numberOfQuestions: 0,
+  const form = useForm<Input>({
+    resolver: zodResolver(quizCreationSchema),
+    defaultValues: {
+      topic: topicParam,
+      type: "mcq",
+      amount: 3,
+    },
+  });
+
+  const onSubmit = async (data: Input) => {
+    setShowLoader(true);
+    getQuestions(data, {
+      onError: (error) => {
+        setShowLoader(false);
+        if (error instanceof AxiosError) {
+          if (error.response?.status === 500) {
+            toast({
+              title: "Error",
+              description: "Something went wrong. Please try again later.",
+              variant: "destructive",
+            });
+          }
+        }
+      },
+      onSuccess: ({ gameId }: { gameId: string }) => {
+        setFinishedLoading(true);
+        setTimeout(() => {
+          if (form.getValues("type") === "mcq") {
+            router.push(`/play/mcq/${gameId}`);
+          } else if (form.getValues("type") === "open_ended") {
+            router.push(`/play/open-ended/${gameId}`);
+          }
+        }, 2000);
       },
     });
-    
-    const { isSubmitting, isValid } = form.formState;
-  
-    const onSubmit = async (values: z.infer<typeof formSchema>) => { 
-      try {
-        const response = await axios.post("/quiz/new_quiz/quiz_ai", values);
-        router.push(`/quiz/new_quiz/quiz_ai/${response.data.id}`);
-      } catch (error) {
-        toast.error("Something went wrong");
-      }
-    };
-    console.log("isvalid", isValid);
-    return (
-      <div className="flex mx-auto max-w-5x md:items-center md:justify-center h-full p-6">
-        <div>
-          <h1 className="text-5xl">Quiz Yourself !!</h1>
-          <p className="text-sm text-slate-600">Enter any topic to generate quiz questions and test your knowledge. </p>
+  };
+  form.watch();
+
+  if (showLoader) {
+    return <LoadingQuestions finished={finishedLoading} />;
+  }
+
+  return (
+    <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Quiz Creation</CardTitle>
+          <CardDescription>Choose a topic</CardDescription>
+        </CardHeader>
+        <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}className="space-y-8 mt-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
                 control={form.control}
-                name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Quiz topic</FormLabel>
-                      <FormControl>
-                      <Input  placeholder="e.g. 'basic Python'"{...field}/>
-                      </FormControl>
-                  </FormItem>)}/>
-                  <FormField
-                  control={form.control}
-                  name="numberOfQuestions"
-                  render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Number of Questions</FormLabel>
-                        <FormControl>
-                        <Input type="number" placeholder="e.g. '10'"{...field}/>
-                        </FormControl>
-                        </FormItem>)}/>
-              <FormDescription>Do not worry!</FormDescription>
-              <FormDescription>This is not for marks ;)</FormDescription>
-              <FormMessage />
-                <div className="flex items-center gap-x-2">
-                  <Link href="/quiz/new_quiz/Quiz">
-                    <Button
-                    type="button"
-                    variant="ghost"
-                    >Cancel
-                   </Button>
-                </Link>
-                  <Button
-                  type="submit" 
-                  disabled= {isSubmitting || !isValid}
-                  >
-                  Continue
-                  </Button>
-              </div>
-              </form>
-          </Form>
-          </div>
-      </div>
-    );
-  }
-   
-export default StartQuizPage;
+                name="topic"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Topic</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter a topic" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Please provide any topic you would like to be quizzed on
+                      here.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Number of Questions</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="How many questions?"
+                        type="number"
+                        {...field}
+                        onChange={(e) => {
+                          form.setValue("amount", parseInt(e.target.value));
+                        }}
+                        min={1}
+                        max={10}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      You can choose how many questions you would like to be
+                      quizzed on here.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
+              <div className="flex justify-between">
+                <Button
+                  variant={
+                    form.getValues("type") === "mcq" ? "default" : "secondary"
+                  }
+                  className="w-1/2 rounded-none rounded-l-lg"
+                  onClick={() => {
+                    form.setValue("type", "mcq");
+                  }}
+                  type="button"
+                >
+                  <CopyCheck className="w-4 h-4 mr-2" /> Multiple Choice
+                </Button>
+                <Separator orientation="vertical" />
+                <Button
+                  variant={
+                    form.getValues("type") === "open_ended"
+                      ? "default"
+                      : "secondary"
+                  }
+                  className="w-1/2 rounded-none rounded-r-lg"
+                  onClick={() => form.setValue("type", "open_ended")}
+                  type="button"
+                >
+                  <BookOpen className="w-4 h-4 mr-2" /> Open Ended
+                </Button>
+              </div>
+              <Button disabled={isLoading} type="submit">
+                Submit
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default QuizCreation;
