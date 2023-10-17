@@ -1,22 +1,39 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
+import { auth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+import React from "react";
+import QuizNow from "./new_quiz/QuizNow";
+import RecentQuiz from "./new_quiz/RecentQuiz";
 
-const QuizPage = () => {
-    return (
-        <div className="p-6">
-        <Link href="/quiz/new_quiz">
-          <Button>
-            Start Quiz        
-          </Button>
-        </Link>
-        <Link href="/quiz/result">
-          <Button>
-            Quiz result        
-          </Button>
-        </Link>
+type Props = {};
+
+export const metadata = {
+  title: "Quiz page",
+  description: "Quiz yourself on anything!",
+};
+
+const Dasboard = async (props: Props) => {
+  const session = await getAuthSession();
+  if (!session?.user) {
+    redirect("/");
+  }
+  
+
+  return (
+    <main className="p-8 mx-auto max-w-7xl">
+      <div className="flex items-center">
+        <h2 className="mr-2 text-3xl font-bold tracking-tight">Quiz Page</h2>
       </div>
-    );
-}
- 
-export default QuizPage;
+
+      <div className="grid gap-4 mt-4 md:grid-cols-2">
+        <QuizNow />
+      </div>
+      <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-7">
+      <RecentQuiz />
+
+      </div>
+    </main>
+  );
+};
+
+export default Dasboard;

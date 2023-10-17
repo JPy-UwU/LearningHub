@@ -19,6 +19,7 @@
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.16",
     "axios": "^1.5.1",
+    "card": "^2.5.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "eslint": "8.49.0",

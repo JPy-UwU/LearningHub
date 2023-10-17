@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 const formSchema = z.object({
   title:z.string().min(1,{
     message: "A topic is required", }),
-    numberOfQuestions:z.number().int().min(1,{
+    numberOfQuestions:z.number().int().min(1).max(10, {
       message: "number of questions is required",}),
 });
 
@@ -66,7 +66,7 @@ const StartQuizPage = () => {
                     <FormItem>
                     <FormLabel>Quiz topic</FormLabel>
                       <FormControl>
-                      <Input disabled={isSubmitting} placeholder="e.g. 'basic Python'"{...field}/>
+                      <Input  placeholder="e.g. 'basic Python'"{...field}/>
                       </FormControl>
                   </FormItem>)}/>
                   <FormField
@@ -76,7 +76,7 @@ const StartQuizPage = () => {
                         <FormItem>
                         <FormLabel>Number of Questions</FormLabel>
                         <FormControl>
-                        <Input type="number" disabled={isSubmitting} placeholder="e.g. '20'"{...field}/>
+                        <Input type="number" placeholder="e.g. '10'"{...field}/>
                         </FormControl>
                         </FormItem>)}/>
               <FormDescription>Do not worry!</FormDescription>
@@ -92,7 +92,7 @@ const StartQuizPage = () => {
                 </Link>
                   <Button
                   type="submit" 
-                  // disabled= {isSubmitting || !isValid}
+                  disabled= {isSubmitting || !isValid}
                   >
                   Continue
                   </Button>
