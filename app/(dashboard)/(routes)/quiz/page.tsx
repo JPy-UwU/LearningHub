@@ -13,11 +13,6 @@ export const metadata = {
 };
 
 const Dasboard = async (props: Props) => {
-  const session = await getAuthSession();
-  if (!session?.user) {
-    redirect("/");
-  }
-  
 
   return (
     <main className="p-8 mx-auto max-w-7xl">
