@@ -1,9 +1,7 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+
 import { Progress } from "@/components/ui/progress";
-
-
-type Props = { finished: boolean };
 
 const loadingTexts = [
   "Generating questions...",
@@ -13,21 +11,29 @@ const loadingTexts = [
   "Igniting the flame of wonder and exploration...",
 ];
 
-const LoadingQuestions = ({ finished }: Props) => {
-  const [progress, setProgress] = React.useState(10);
-  const [loadingText, setLoadingText] = React.useState(loadingTexts[0]);
-  React.useEffect(() => {
+const LoadingQuestions = ({ 
+  finished 
+}: { 
+  finished: boolean 
+}) => {
+  const [progress, setProgress] = useState(10);
+  const [loadingText, setLoadingText] = useState(loadingTexts[0]);
+  
+  useEffect(() => {
     const interval = setInterval(() => {
       let randomIndex = Math.floor(Math.random() * loadingTexts.length);
       setLoadingText(loadingTexts[randomIndex]);
     }, 2000);
+    
     return () => clearInterval(interval);
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (finished) return 100;
+        if (finished) {
+          return 100;
+        }
         if (prev === 100) {
           return 0;
         }
@@ -37,6 +43,7 @@ const LoadingQuestions = ({ finished }: Props) => {
         return prev + 0.5;
       });
     }, 100);
+    
     return () => clearInterval(interval);
   }, [finished]);
 

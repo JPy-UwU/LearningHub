@@ -1,8 +1,14 @@
 "use client";
-import React from "react";
+
+import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { BookOpen, CopyCheck } from "lucide-react";
+import axios, { AxiosError } from "axios";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+
 import {
   Form,
   FormControl,
@@ -12,10 +18,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { BookOpen, CopyCheck } from "lucide-react";
-import axios, { AxiosError } from "axios";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -26,45 +28,28 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
-import LoadingQuestions from "./LoadingQuestions";
+import LoadingQuestions from "../_components/LoadingQuestions";
 
-
-type Props = {
-  topic: string;
-};
-
-
-
-export const quizCreationSchema = z.object({
-  topic: z
-    .string()
-    .min(4, {
+const quizCreationSchema = z.object({
+  topic: z.string().min(4, {
       message: "Topic must be at least 4 characters long",
-    })
-    .max(50, {
+    }).max(50, {
       message: "Topic must be at most 50 characters long",
     }),
-  type: z.enum(["mcq", "open_ended"]),
-  amount: z.number().min(1).max(10),
-});
-
-
-type Input = z.infer<typeof quizCreationSchema>;
-
-const QuizCreation = ({ topic: topicParam }: Props) => {
-  const router = useRouter();
-  const [showLoader, setShowLoader] = React.useState(false);
-  const [finishedLoading, setFinishedLoading] = React.useState(false);
-  const { toast } = useToast();
-  const { mutate: getQuestions, isLoading } = useMutation({
-    mutationFn: async ({ amount, topic, type }: Input) => {
-      const response = await axios.post("/api/game", { amount, topic, type });
-      return response.data;
-    },
+    type: z.enum(["mcq", "open_ended"]),
+    amount: z.number().min(1).max(10),
   });
 
-  const form = useForm<Input>({
+  const CreatePage = ({ 
+    topic: topicParam,
+  }: {
+    topic: string;
+  }) => {
+    const router = useRouter();
+    const [showLoader, setShowLoader] = useState(false);
+    const [finishedLoading, setFinishedLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof quizCreationSchema>>({
     resolver: zodResolver(quizCreationSchema),
     defaultValues: {
       topic: topicParam,
@@ -73,32 +58,23 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
     },
   });
 
-  const onSubmit = async (data: Input) => {
+  const onSubmit = async (values: z.infer<typeof quizCreationSchema>) => {
     setShowLoader(true);
-    getQuestions(data, {
-      onError: (error) => {
-        setShowLoader(false);
-        if (error instanceof AxiosError) {
-          if (error.response?.status === 500) {
-            toast({
-              title: "Error",
-              description: "Something went wrong. Please try again later.",
-              variant: "destructive",
-            });
-          }
+
+    try {
+      const response = await axios.post("/api/game", values);
+      setFinishedLoading(true);
+      setTimeout(() => {
+        if (form.getValues("type") === "mcq") {
+          router.push(`/play/mcq/${response.data.gameId}`);
+        } else if (form.getValues("type") === "open_ended") {
+          router.push(`/play/open-ended/${response.data.gameId}`);
         }
-      },
-      onSuccess: ({ gameId }: { gameId: string }) => {
-        setFinishedLoading(true);
-        setTimeout(() => {
-          if (form.getValues("type") === "mcq") {
-            router.push(`/play/mcq/${gameId}`);
-          } else if (form.getValues("type") === "open_ended") {
-            router.push(`/play/open-ended/${gameId}`);
-          }
-        }, 2000);
-      },
-    });
+      }, 2000);
+    } catch (error) {
+      setShowLoader(false);
+      toast.error("Something went wrong.");
+    }
   };
   form.watch();
 
@@ -187,7 +163,7 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
                   <BookOpen className="w-4 h-4 mr-2" /> Open Ended
                 </Button>
               </div>
-              <Button disabled={isLoading} type="submit">
+              <Button disabled={showLoader} type="submit">
                 Submit
               </Button>
             </form>
@@ -198,4 +174,4 @@ const QuizCreation = ({ topic: topicParam }: Props) => {
   );
 };
 
-export default QuizCreation;
+export default CreatePage;

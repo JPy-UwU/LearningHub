@@ -1,38 +1,26 @@
-
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import React from "react";
-import QuizNow from "./new_quiz/QuizNow";
-import RecentQuiz from "./new_quiz/RecentQuiz";
-import { getAuthSession } from "@/lib/nextauth";
 
-type Props = {};
+import QuizCard from "./_components/quiz-card";
+import RecentQuizCard from "./_components/recent-quiz-card";
 
-export const metadata = {
-  title: "Quiz page",
-  description: "Quiz yourself on anything!",
-};
+const QuizPage = () => {
+  const { userId } = auth();
 
-const Dasboard = async (props: Props) => {
-  const session = await getAuthSession();
-  if (!session?.user) {
-    redirect("/");
+  if (!userId) {
+    redirect("/login");
   }
+  
   return (
-    <main className="p-8 mx-auto max-w-7xl">
-      <div className="flex items-center">
-        <h2 className="mr-2 text-3xl font-bold tracking-tight">Quiz Page</h2>
+    <div className="flex mx-auto md:items-center md:justify-center h-full p-6">
+      <div className="flex mx-auto p-6 max-w-5xl">
+        <QuizCard />
       </div>
-
-      <div className="grid gap-4 mt-4 md:grid-cols-2">
-        <QuizNow />
+      <div className="flex mx-auto max-w-5xl">
+        <RecentQuizCard />
       </div>
-      <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-7">
-      <RecentQuiz />
-
-      </div>
-    </main>
+    </div>
   );
 };
 
-export default Dasboard;
+export default QuizPage;
