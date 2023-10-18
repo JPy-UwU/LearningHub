@@ -1,5 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider     = "mysql"
@@ -7,6 +8,70 @@ datasource db {
   relationMode = "prisma"
 }
 
-generator client {
-  provider = "prisma-client-js"
+model Attachment {
+  id        String   @id
+  name      String
+  url       String   @db.Text
+  courseId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  @@index([courseId])
+}
+
+model Category {
+  id        String   @id
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model Course {
+  id          String   @id
+  userId      String
+  title       String   @db.Text
+  description String?  @db.Text
+  imageUrl    String?  @db.Text
+  price       Float?
+  isPublished Boolean  @default(false)
+  categoryId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+
+  @@index([categoryId])
+}
+
+
+enum GameType {
+  mcq
+  open_ended
+}
+
+model Game {
+  id String @id @default(uuid())
+  userId String
+  timeStarted DateTime
+  topic String
+  timeEnded DateTime?
+  gameType GameType
+
+  questions Question[]
+
+  @@index([userId], name: "userId")
+}
+
+model Question {
+  id String @id @default(uuid())
+  gameId String
+  question String
+  answer String
+  options Json?
+  percentageCorrect Float?
+  isCorrect Boolean?
+  questionType GameType
+  userAnsers String?
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId], name: "gameId")
 }
