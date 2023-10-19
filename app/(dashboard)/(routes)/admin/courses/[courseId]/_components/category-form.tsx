@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Combobox } from "@/components/ui/combobox";
 
 interface CategoryFormProps {
@@ -53,7 +52,7 @@ export const CategoryForm = ({
   const onSubmit = async (values: z.infer<typeof fromSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course description updated.");
+      toast.success("Course category updated.");
       toggleEdit();
       router.refresh();
     } catch {

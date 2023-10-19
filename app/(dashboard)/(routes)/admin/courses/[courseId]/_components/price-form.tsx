@@ -18,23 +18,22 @@ import {
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { formatPrice } from "@/lib/format";
 
-interface DescriptionFormProps {
+interface PriceFormProps {
   initialData: Course;
   courseId: string;
 };
 
 const fromSchema = z.object({
-  description: z.string().min(1, {
-    message: "Description is required.",
-  }),
+  price: z.coerce.number(),
 });
 
-export const DescriptionForm = ({
+export const PriceForm = ({
   initialData,
   courseId,
-}: DescriptionFormProps) => {
+}: PriceFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => setIsEditing((current) => !current);
 
@@ -43,7 +42,7 @@ export const DescriptionForm = ({
   const form = useForm<z.infer<typeof fromSchema>>({
     resolver: zodResolver(fromSchema),
     defaultValues: {
-      description: initialData?.description || "",
+      price: initialData?.price || undefined,
     },
   });
 
@@ -52,7 +51,7 @@ export const DescriptionForm = ({
   const onSubmit = async (values: z.infer<typeof fromSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course description updated.");
+      toast.success("Course price updated.");
       toggleEdit();
       router.refresh();
     } catch {
@@ -63,14 +62,14 @@ export const DescriptionForm = ({
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course Description
+        Course Price
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing ? (
             <>Cancel</>
             ): (
               <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit description
+              Edit price
             </>
           )}
         </Button>
@@ -78,9 +77,11 @@ export const DescriptionForm = ({
       {!isEditing && (
         <p className={cn(
           "text-sm mt-2",
-          !initialData.description && "text-slate-500 italic"
+          !initialData.price && "text-slate-500 italic"
         )}>
-          {initialData.description || "No description provided."}
+          {initialData.price
+            ? formatPrice(initialData.price)
+            : "No price set"}
         </p>
       )}
       {isEditing && (
@@ -91,13 +92,15 @@ export const DescriptionForm = ({
           >
             <FormField
               control={form.control}
-              name="description"
+              name="price"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea 
+                    <Input
+                      type="number"
+                      step="0.01"
                       disabled={isSubmitting}
-                      placeholder="E.g. 'This course is about...'"
+                      placeholder="Set a price for your course"
                       {...field}
                     />
                   </FormControl>
