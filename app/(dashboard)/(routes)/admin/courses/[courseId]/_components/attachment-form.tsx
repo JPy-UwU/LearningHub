@@ -2,14 +2,12 @@
 
 import * as z from "zod";
 import axios from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { ImageIcon, Pencil, PlusCircle, File, Loader2, X } from "lucide-react";
+import { PlusCircle, File, Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Attachment, Course } from "@prisma/client";
-import Image from "next/image";
+
 
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
