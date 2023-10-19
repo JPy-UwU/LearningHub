@@ -20,7 +20,7 @@ const CourseIdPage = async ({
   const { userId } = auth();
 
   if (!userId) {
-    return redirect("/login");
+    return redirect("/sign-in");
   }
 
   const course = await db.course.findUnique({
