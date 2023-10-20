@@ -62,7 +62,7 @@ model Question {
   percentageCorrect Float?
   isCorrect         Boolean?
   questionType      GameType
-  userAnsers        String?
+  userAnswers       String?
   game              Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
   @@index([gameId], map: "gameId")

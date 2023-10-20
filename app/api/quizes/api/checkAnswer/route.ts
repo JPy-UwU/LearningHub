@@ -38,7 +38,7 @@ export async function POST(req: Request, res: Response) {
     }
     await prisma.question.update({
       where: { id: questionId },
-      data: { userAnswer: userInput },
+      data: { userAnswers : userInput },
     });
     if (question.questionType === "mcq") {
       const isCorrect =
