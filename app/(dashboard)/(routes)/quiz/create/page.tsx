@@ -5,10 +5,10 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BookOpen, CopyCheck } from "lucide-react";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-
+import {useMutation} from "@tanstack/react-query"
 import {
   Form,
   FormControl,
@@ -28,7 +28,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import LoadingQuestions from "../_components/LoadingQuestions";
+import LoadingQuestions from "../_components/loading-questions";
 
 const quizCreationSchema = z.object({
   topic: z.string().min(4, {
@@ -40,6 +40,16 @@ const quizCreationSchema = z.object({
     amount: z.number().min(1).max(10),
   });
 
+  type Props = {
+    topic: string;
+  };
+  
+  interface inputProps {
+    topic: string;
+    type: ["mcq", "open_ended"];
+    amount: number;
+  }
+
   const CreatePage = ({ 
     topic: topicParam,
   }: {
@@ -48,7 +58,12 @@ const quizCreationSchema = z.object({
     const router = useRouter();
     const [showLoader, setShowLoader] = useState(false);
     const [finishedLoading, setFinishedLoading] = useState(false);
-
+    const { mutate: getQuestions, isPending } = useMutation({
+      mutationFn: async ({ amount, topic, type }: inputProps) => {
+        const response = await axios.post("/api/game", { amount, topic, type });
+        return response.data;
+      },
+    });
   const form = useForm<z.infer<typeof quizCreationSchema>>({
     resolver: zodResolver(quizCreationSchema),
     defaultValues: {
