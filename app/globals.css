@@ -80,3 +80,7 @@ body,
     @apply bg-background text-foreground;
   }
 }
+
+.str-chat * {
+  font-family: inherit !important;
+}

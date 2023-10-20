@@ -1,43 +1,59 @@
 "use client";
 import { StreamChat } from "stream-chat";
-import { Channel, ChannelHeader, Chat , MessageInput, MessageList, Thread, Window} from "stream-chat-react"
-
-const userId = "user_2VisWyZaR1EYCUB22uHzc8BgefK"
-
-const chatClient = StreamChat.getInstance(
-  process.env.NEXT_PUBLIC_STREAM_KEY!
-)
-
-chatClient.connectUser(
-  {
-    id: userId,
-    name: "Sterben"
-  },
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidXNlcl8yVmlzV3laYVIxRVlDVUIyMnVIemM4QmdlZksifQ.tqONrQE6LFUzP6h-YpkVXKHMLUrqZINWPFFt04TI2DY"
-
-);
-
-const channel = chatClient.channel("messaging", "channel_1", {
-  name: "Channel #1",
-  members: [userId]
-})
+import {
+  Channel,
+  ChannelHeader,
+  ChannelList,
+  Chat,
+  LoadingIndicator,
+  MessageInput,
+  MessageList,
+  Thread,
+  Window,
+} from "stream-chat-react";
+import useInitializeChatClient from "./useInitializeChatClient";
+import { useUser } from "@clerk/nextjs";
 
 const DiscussionsPage = () => {
+  const chatClient = useInitializeChatClient();
+  const { user } = useUser();
+
+  if (!chatClient || !user) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <LoadingIndicator size={40} />
+      </div>
+    );
+  }
+
   return (
-    <div>
+    <div className="h-screen">
       <Chat client={chatClient}>
-        <Channel channel = {channel}>
+        <div className="flex flex-row h-[850px]">
+          <div className="w-full max-w-[300px]">
+        <ChannelList
+          filters={{
+            type: "messaging",
+            members: { $in: [user.id] },
+          }}
+          sort={{ last_message_at: -1 }}
+          options={{ state: true, presence: true, limit: 10 }}
+        />
+        </div>
+        <div className="h-full w-full">
+        <Channel>
           <Window>
-            <ChannelHeader/>
-            <MessageList/>
-            <MessageInput/>
+            <ChannelHeader />
+            <MessageList />
+            <MessageInput />
           </Window>
-          <Thread/>
+          <Thread />
         </Channel>
-    
+        </div>
+        </div>
       </Chat>
     </div>
   );
-}
- 
+};
+
 export default DiscussionsPage;
