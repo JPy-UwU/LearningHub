@@ -5,7 +5,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BookOpen, CopyCheck } from "lucide-react";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
@@ -66,9 +66,9 @@ const quizCreationSchema = z.object({
       setFinishedLoading(true);
       setTimeout(() => {
         if (form.getValues("type") === "mcq") {
-          router.push(`/play/mcq/${response.data.gameId}`);
+          router.push(`/quiz/play/mcq/${response.data.gameId}`);
         } else if (form.getValues("type") === "open_ended") {
-          router.push(`/play/open-ended/${response.data.gameId}`);
+          router.push(`/quiz/play/open-ended/${response.data.gameId}`);
         }
       }, 2000);
     } catch (error) {
