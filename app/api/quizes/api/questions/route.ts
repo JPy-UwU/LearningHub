@@ -1,9 +1,8 @@
-import { strict_output } from "@/lib/gpt";
-import { getAuthSession } from "@/lib/nextauth";
-import { NextResponse } from "next/server";
-import { ZodError } from "zod";
 import { z } from "zod";
+import { auth } from "@clerk/nextjs";
+import { NextResponse } from "next/server";
 
+import { strict_output } from "@/lib/openai";
 
 export const quizCreationSchema = z.object({
   topic: z
@@ -36,19 +35,28 @@ export const endGameSchema = z.object({
 
 export async function POST(req: Request, res: Response) {
   try {
-    const session = await getAuthSession();
-    // if (!session?.user) {
-    //   return NextResponse.json(
-    //     { error: "You must be logged in to create a game." },
-    //     {
-    //       status: 401,
-    //     }
-    //   );
-    // }
+    const { userId } = auth();
+
+    if (!userId) {
+      return NextResponse.json("Unauthorized", { status: 401 });
+    }
+
     const body = await req.json();
     const { amount, topic, type } = getQuestionsSchema.parse(body);
     let questions: any;
-   if (type === "mcq") {
+
+    if (type === "open_ended") {
+      questions = await strict_output(
+        "You are a helpful AI that is able to generate a pair of question and answers, the length of each answer should not be more than 15 words, store all the pairs of answers and questions in a JSON array",
+        new Array(amount).fill(
+          `You are to generate a random hard open-ended questions about ${topic}`
+        ),
+        {
+          question: "question",
+          answer: "answer with max length of 15 words",
+        }
+      );
+    } else if (type === "mcq") {
       questions = await strict_output(
         "You are a helpful AI that is able to generate mcq questions and answers, the length of each answer should not be more than 15 words, store all answers and questions and options in a JSON array",
         new Array(amount).fill(
@@ -63,30 +71,9 @@ export async function POST(req: Request, res: Response) {
         }
       );
     }
-    return NextResponse.json(
-      {
-        questions: questions,
-      },
-      {
-        status: 200,
-      }
-    );
+    
+    return NextResponse.json({ questions: questions }, { status: 200 });
   } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { error: error.issues },
-        {
-          status: 400,
-        }
-      );
-    } else {
-      console.error("elle gpt error", error);
-      return NextResponse.json(
-        { error: "An unexpected error occurred." },
-        {
-          status: 500,
-        }
-      );
-    }
+    return NextResponse.json("Internal Error", { status: 500 });
   }
 }

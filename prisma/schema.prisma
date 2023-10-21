@@ -42,11 +42,7 @@ model Course {
 }
 
 model Game {
-<<<<<<< HEAD
   id          String     @id @default(cuid())
-=======
-  id          String     @id @default(uuid())
->>>>>>> 5e9699b9c916059dd67ed6b794798c88d71d554e
   userId      String
   timeStarted DateTime
   topic       String
@@ -58,11 +54,7 @@ model Game {
 }
 
 model Question {
-<<<<<<< HEAD
   id                String   @id @default(cuid())
-=======
-  id                String   @id @default(uuid())
->>>>>>> 5e9699b9c916059dd67ed6b794798c88d71d554e
   gameId            String
   question          String
   answer            String
@@ -132,12 +124,9 @@ enum GameType {
   mcq
   open_ended
 }
-<<<<<<< HEAD
 
 model topic_count {
   id    String @id @default(cuid())
   topic String @unique
   count Int
 }
-=======
->>>>>>> 5e9699b9c916059dd67ed6b794798c88d71d554e
