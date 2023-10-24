@@ -13,8 +13,8 @@ export default function useWindowSize() {
   useEffect(() => {
     const handleResize = () => {
       setWindowSize({
-        width: typeof window !== "undefined" ? window.innerWidth : 0,
-        height: typeof window !== "undefined" ? window.innerHeight : 0,
+        width: window.innerWidth,
+        height: window.innerHeight,
       });
     };
 

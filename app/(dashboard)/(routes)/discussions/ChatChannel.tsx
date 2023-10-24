@@ -13,13 +13,14 @@ import {
 
 interface ChatChannelProps {
   show: boolean;
+  hideChannelOnThread: boolean;
 }
 
-export default function ChatChannel({ show }: ChatChannelProps) {
+export default function ChatChannel({ show, hideChannelOnThread }: ChatChannelProps) {
   return (
     <div className={`h-full w-full ${show ? "block" : "hidden"}`}>
       <Channel>
-        <Window>
+        <Window hideOnThread={hideChannelOnThread}>
           <ChannelHeader />
           <MessageList />
           <MessageInput />
