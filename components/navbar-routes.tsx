@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 import { Button } from "./ui/button";
-import { isTeacher } from "@/lib/teacher";
+import { isAdmin } from "@/lib/admin";
 
 const NavbarRoutes = () => {
   const { userId } = useAuth();
@@ -27,7 +27,7 @@ const NavbarRoutes = () => {
             Exit
           </Button>
         </Link>
-      ): isTeacher(userId) ? (
+      ): isAdmin(userId) ? (
         <Link href="/admin/courses">
           <Button size="sm" variant="ghost">
             Admin Mode
