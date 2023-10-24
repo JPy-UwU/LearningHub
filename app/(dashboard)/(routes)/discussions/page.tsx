@@ -13,10 +13,26 @@ import {
 } from "stream-chat-react";
 import useInitializeChatClient from "./useInitializeChatClient";
 import { useUser } from "@clerk/nextjs";
+import MenuBar from "./MenuBar";
+import SideBar from "./SideBar";
+import ChatChannel from "./ChatChannel";
+import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
+import useWindowSize from "@/app/hooks/useWindowSize";
+import { mdBreakpoint } from "@/app/utils/tailwind";
 
 const DiscussionsPage = () => {
   const chatClient = useInitializeChatClient();
   const { user } = useUser();
+
+  const [SidebarOpen, setSidebarOpen] = useState(false);
+
+  const windowSize = useWindowSize();
+  const isLargeScreen = windowSize.width >= mdBreakpoint;
+
+  useEffect(()=>{
+    if (windowSize.width >= mdBreakpoint) setSidebarOpen(false);
+  }, [windowSize.width])
 
   if (!chatClient || !user) {
     return (
@@ -29,27 +45,20 @@ const DiscussionsPage = () => {
   return (
     <div className="h-screen">
       <Chat client={chatClient}>
+        <div className="flex justify-center border-b border-b-[#DBDDE1] p-3 md:hidden">
+          <button onClick={() => setSidebarOpen(!SidebarOpen)}>
+            {!SidebarOpen ? (
+              <span className="flex items-center gap-1">
+                <Menu /> Menu
+              </span>
+            ) : (
+              <X />
+            )}
+          </button>
+        </div>
         <div className="flex flex-row h-[850px]">
-          <div className="w-full max-w-[300px]">
-        <ChannelList
-          filters={{
-            type: "messaging",
-            members: { $in: [user.id] },
-          }}
-          sort={{ last_message_at: -1 }}
-          options={{ state: true, presence: true, limit: 10 }}
-        />
-        </div>
-        <div className="h-full w-full">
-        <Channel>
-          <Window>
-            <ChannelHeader />
-            <MessageList />
-            <MessageInput />
-          </Window>
-          <Thread />
-        </Channel>
-        </div>
+          <SideBar user={user} show={isLargeScreen || SidebarOpen} />
+          <ChatChannel show={isLargeScreen ||!SidebarOpen} />
         </div>
       </Chat>
     </div>
