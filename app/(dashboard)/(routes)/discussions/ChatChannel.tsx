@@ -22,6 +22,14 @@ export default function ChatChannel({ show, hideChannelOnThread }: ChatChannelPr
       <Channel>
         <Window hideOnThread={hideChannelOnThread}>
           <ChannelHeader />
+          
+          <input 
+              type="search" 
+              placeholder="Search Messages"
+              className="rounded-full border border-gray-300 px-4 py-2"
+              
+              />
+              <br></br>
           <MessageList />
           <MessageInput />
         </Window>
