@@ -1,5 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider     = "mysql"
@@ -7,49 +8,140 @@ datasource db {
   relationMode = "prisma"
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model Course {
-  id String @id @default(uuid())
-  userId String
-  title String @db.Text
-  description String? @db.Text
-  imageUrl String? @db.Text
-  price Float?
-  isPublished Boolean @default(false)
-
-  categoryId String?
-  category Category? @relation(fields: [categoryId], references: [id])
-
+  id          String       @id @default(uuid())
+  userId      String
+  title       String       @db.Text
+  description String?      @db.Text
+  imageUrl    String?      @db.Text
+  price       Float?
+  isPublished Boolean      @default(false)
+  categoryId  String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   attachments Attachment[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  chapters    Chapter[]
+  purchases   Purchase[]
+  category    Category?    @relation(fields: [categoryId], references: [id])
 
   @@index([categoryId])
 }
 
 model Category {
-  id String @id @default(uuid())
-  name String
-  courses Course[]
-
+  id        String   @id @default(uuid())
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  courses   Course[]
 }
 
 model Attachment {
-  id String @id @default(uuid())
-  name String
-  url String @db.Text
-
-  courseId String
-  couse Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
-
+  id        String   @id @default(uuid())
+  name      String
+  url       String   @db.Text
+  courseId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  couse     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@index([courseId])
+}
+
+model Chapter {
+  id           String         @id @default(uuid())
+  title        String
+  description  String?        @db.Text
+  videoUrl     String?        @db.Text
+  position     Int
+  isPublished  Boolean        @default(false)
+  isFree       Boolean        @default(false)
+  courseId     String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  muxData      MuxData?
+  course       Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  userProgress UserProgress[]
+
+  @@index([courseId])
+}
+
+model MuxData {
+  id         String  @id @default(uuid())
+  assetId    String
+  playbackId String?
+  chapterId  String  @unique
+  chapter    Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+}
+
+model UserProgress {
+  id          String   @id @default(uuid())
+  userId      String
+  isCompleted Boolean  @default(false)
+  chapterId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, chapterId])
+  @@index([chapterId])
+}
+
+model Purchase {
+  id        String   @id @default(uuid())
+  userId    String
+  courseId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+}
+
+model StripeCustomer {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  stripeCustomerId String   @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Game {
+  id          String        @id
+  userId      String
+  timeStarted DateTime
+  topic       String
+  timeEnded   DateTime?
+  gameType    Game_gameType
+
+  @@index([userId], map: "userId")
+}
+
+model Question {
+  id                String                @id
+  gameId            String
+  question          String
+  answer            String
+  options           Json?
+  percentageCorrect Float?
+  isCorrect         Boolean?
+  questionType      Question_questionType
+  userAnswers       String?
+
+  @@index([gameId], map: "gameId")
+}
+
+model topic_count {
+  id    String @id
+  topic String @unique
+  count Int
+}
+
+enum Game_gameType {
+  mcq
+  open_ended
+}
+
+enum Question_questionType {
+  mcq
+  open_ended
 }

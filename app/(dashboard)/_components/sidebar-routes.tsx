@@ -1,7 +1,3 @@
-/**
- * SidebarRoutes component contains api route, icon and label for each SidebarItem.
- */
-
 "use client";
 
 import { usePathname } from "next/navigation";

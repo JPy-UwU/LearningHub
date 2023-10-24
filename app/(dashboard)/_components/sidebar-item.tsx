@@ -1,7 +1,3 @@
-/**
- * SidebarItem component represents each link on sidebar.
- */
-
 "use client";
 
 import { LucideIcon } from "lucide-react";
@@ -9,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 
-// creating interface for props inside sidebar
 interface SidebarItemProps {
   icon: LucideIcon,
   label: string,
@@ -24,19 +19,16 @@ const SidebarItem = ({
   const pathname = usePathname();
   const router = useRouter();
 
-  // checking if a sidebar link is active or not.
   const isActive = 
     (pathname === "/dashboard" && href === "/dashboard") ||
     pathname === href ||
     pathname?.startsWith(`${href}/`);
 
-  // onClick function, pushes api route to router.
   const onClick = () => {
     router.push(href);
   }
 
   return (
-    // Using cn() for using function inside tailwindcss classes, more info on https://ui.shadcn.com/docs
     <button
       onClick={onClick}
       type="button"

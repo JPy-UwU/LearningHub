@@ -1,7 +1,3 @@
-/**
- * Logo component used to display logo.svg in sidebar.
- */
-
 import Image from "next/image";
 
 const Logo = () => {
