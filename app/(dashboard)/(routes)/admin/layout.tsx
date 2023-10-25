@@ -11,7 +11,7 @@ const DashboardLayout = ({
 ) => {
   const { userId } = auth();
 
-  if (isAdmin(userId)) {
+  if (!isAdmin(userId)) {
     return redirect("/dashboard");
   }
 
