@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { isServer } from "../utils/utils";
+import { useEffect, useState } from "react";
+import { isServer } from "@/lib/utils";
 
 export default function useWindowSize() {
   const [windowSize, setWindowSize] = useState(() => {

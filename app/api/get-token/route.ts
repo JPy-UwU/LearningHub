@@ -1,4 +1,4 @@
-import { env } from "@/app/(dashboard)/(routes)/discussions/env";
+import { env } from "@/lib/env";
 import { currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { StreamChat } from "stream-chat";

@@ -2,9 +2,6 @@ import React from "react";
 import {
   Channel,
   ChannelHeader,
-  ChannelList,
-  Chat,
-  LoadingIndicator,
   MessageInput,
   MessageList,
   Thread,
@@ -16,8 +13,10 @@ interface ChatChannelProps {
   hideChannelOnThread: boolean;
 }
 
-
-export default function ChatChannel({ show, hideChannelOnThread }: ChatChannelProps) {
+export default function ChatChannel({
+  show,
+  hideChannelOnThread,
+}: ChatChannelProps) {
   return (
     <div className={`h-full w-full ${show ? "block" : "hidden"}`}>
       <Channel>

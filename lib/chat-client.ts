@@ -1,8 +1,8 @@
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { StreamChat } from "stream-chat";
+
 import { env } from "./env";
-import { error } from "console";
 
 export default function useInitializeChatClient() {
   const { user } = useUser();

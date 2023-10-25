@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import MenuBar from "./MenuBar";
 import {
   ChannelList,
   ChannelPreviewMessenger,
@@ -7,13 +6,15 @@ import {
 } from "stream-chat-react";
 import { UserResource } from "@clerk/types";
 
+import MenuBar from "./chat-menubar";
+
 interface ChatSidebarProps {
   user: UserResource;
   show: boolean;
   onClose: () => void;
 }
 
-export default function SideBar({ user, show, onClose }: ChatSidebarProps) {
+export function SideBar({ user, show, onClose }: ChatSidebarProps) {
   const ChannelPreviewCustom = useCallback(
     (props: ChannelPreviewUIComponentProps) => (
       <ChannelPreviewMessenger
@@ -38,7 +39,7 @@ export default function SideBar({ user, show, onClose }: ChatSidebarProps) {
           members: { $in: [user.id] },
         }}
         sort={{ last_message_at: -1 }}
-        options={{ state: true, presence: true, limit: 10, watch:true }}
+        options={{ state: true, presence: true, limit: 10, watch: true }}
         showChannelSearch
         additionalChannelSearchProps={{
           searchForChannels: true,
