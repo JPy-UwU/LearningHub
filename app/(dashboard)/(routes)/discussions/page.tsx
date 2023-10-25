@@ -7,7 +7,7 @@ import { Menu, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import useWindowSize from "@/app/hooks/useWindowSize";
+import useWindowSize from "@/hooks/useWindowSize";
 import { mdBreakpoint } from "@/lib/tailwind";
 import { SideBar } from "./_comonents/chat-sidebar";
 import useInitializeChatClient from "@/lib/chat-client";
