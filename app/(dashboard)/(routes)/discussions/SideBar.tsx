@@ -38,7 +38,7 @@ export default function SideBar({ user, show, onClose }: ChatSidebarProps) {
           members: { $in: [user.id] },
         }}
         sort={{ last_message_at: -1 }}
-        options={{ state: true, presence: true, limit: 10 }}
+        options={{ state: true, presence: true, limit: 10, watch:true }}
         showChannelSearch
         additionalChannelSearchProps={{
           searchForChannels: true,
