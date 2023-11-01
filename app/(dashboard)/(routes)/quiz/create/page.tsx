@@ -58,12 +58,12 @@ const quizCreationSchema = z.object({
     const router = useRouter();
     const [showLoader, setShowLoader] = useState(false);
     const [finishedLoading, setFinishedLoading] = useState(false);
-    const { mutate: getQuestions, isPending } = useMutation({
-      mutationFn: async ({ amount, topic, type }: inputProps) => {
-        const response = await axios.post("/api/game", { amount, topic, type });
-        return response.data;
-      },
-    });
+    // const { mutate: getQuestions, isPending } = useMutation({
+    //   mutationFn: async ({ amount, topic, type }: inputProps) => {
+    //     const response = await axios.post("/api/game", { amount, topic, type });
+    //     return response.data;
+    //   },
+    // });
   const form = useForm<z.infer<typeof quizCreationSchema>>({
     resolver: zodResolver(quizCreationSchema),
     defaultValues: {
