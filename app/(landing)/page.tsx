@@ -1,22 +1,19 @@
-/**
- * Route: /
- * Description: A landing page for the website, contanins sign-up and sign-in links
- */
-
-"use client";
+// page.tsx
 
 import Link from "next/link";
 import { useAuth } from "@clerk/nextjs";
-
 import { Button } from "@/components/ui/button";
-
+import NavBar from './NavBar';
+import LibraryBanner from './LibraryBanner';
+import WhyUs from './WhyUs';
 const LandingPage = () => {
-  const { isSignedIn } = useAuth();
 
   return (
     <div>
-      Landing Page
-      <div>
+      <NavBar />
+      <LibraryBanner />
+      <WhyUs /> 
+      {/* <div className="flex justify-center space-x-4 mt-10">
         <Link href={isSignedIn ? "/dashboard" : "/sign-up"}>
           <Button>
             Sign Up
@@ -27,9 +24,9 @@ const LandingPage = () => {
             Sign In
           </Button>
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
- 
+
 export default LandingPage;
