@@ -18,7 +18,6 @@ interface CategoriesProps{
     items: Category[];
 }
 
-
 const iconMap: Record<Category["name"],
  IconType> ={
     "Music": FcMusic,
