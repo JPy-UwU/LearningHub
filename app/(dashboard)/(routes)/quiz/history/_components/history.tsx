@@ -1,16 +1,15 @@
-import { Clock, CopyCheck, Edit2 } from "lucide-react";
-import Link from "next/link";
 import React from "react";
+import Link from "next/link";
+import { Clock, CopyCheck, Edit2 } from "lucide-react";
 
 import { prisma } from "@/lib/db";
 
-const History = async ({
-  limit, 
-  userId 
-}: {
+type Props = {
   limit: number;
   userId: string;
-}) => {
+};
+
+const HistoryComponent = async ({ limit, userId }: Props) => {
   const games = await prisma.game.findMany({
     take: limit,
     where: {
@@ -20,6 +19,7 @@ const History = async ({
       timeStarted: "desc",
     },
   });
+  
   return (
     <div className="space-y-8">
       {games.map((game) => {
@@ -54,4 +54,4 @@ const History = async ({
   );
 };
 
-export default History;
+export default HistoryComponent;

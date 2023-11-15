@@ -30,7 +30,7 @@ const RecentActivityCard = async (props: Props) => {
     <Card className="col-span-4 lg:col-span-3">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">
-          <Link href="/history">Recent Activity</Link>
+          <Link href="/quiz/history">Recent Activity</Link>
         </CardTitle>
         <CardDescription>
           You have played a total of {games_count} quizzes.

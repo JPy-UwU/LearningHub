@@ -60,6 +60,7 @@ export async function strict_output(
       response.choices[0].message?.content?.replace(/'/g, '`') ?? '';
 
     res = res.replace(/(\w)"(\w)/g, "$1'$2");
+    res = res.replace(/(\w)```/g, "$1");
 
     if (verbose) {
       console.log(

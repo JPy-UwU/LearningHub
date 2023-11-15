@@ -50,7 +50,7 @@ const OpenEnded = ({
       const payload: z.infer<typeof endGameSchema> = {
         gameId: game.id,
       };
-      const response = await axios.post(`/api/endGame`, payload);
+      const response = await axios.post(`/api/quiz/endGame`, payload);
       return response.data;
     },
   });
@@ -68,7 +68,7 @@ const OpenEnded = ({
         questionId: currentQuestion.id,
         userInput: filledAnswer,
       };
-      const response = await axios.post(`/api/checkAnswer`, payload);
+      const response = await axios.post(`/api/quiz/checkAnswer`, payload);
       return response.data;
     },
   });
@@ -125,7 +125,7 @@ const OpenEnded = ({
           {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
         </div>
         <Link
-          href={`/statistics/${game.id}`}
+          href={`/quiz/statistics/${game.id}`}
           className={cn(buttonVariants({ size: "lg" }), "mt-2")}
         >
           View Statistics
