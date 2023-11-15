@@ -1,5 +1,4 @@
-import OpenAI from "openai";
-
+import OpenAI from 'openai';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -15,16 +14,11 @@ export async function strict_output(
   output_format: OutputFormat,
   default_category: string = "",
   output_value_only: boolean = false,
-  model: string = "gpt-3.5-turbo",
+  model: string = "gpt-3.5-turbo-1106",
   temperature: number = 1,
   num_tries: number = 3,
   verbose: boolean = false
-): Promise<
-  {
-    question: string;
-    answer: string;
-  }[]
-> {
+) {
   const list_input: boolean = Array.isArray(user_prompt);
   const dynamic_elements: boolean = /<.*?>/.test(JSON.stringify(output_format));
   const list_output: boolean = /\[.*?\]/.test(JSON.stringify(output_format));
@@ -32,7 +26,9 @@ export async function strict_output(
   let error_msg: string = "";
 
   for (let i = 0; i < num_tries; i++) {
-    let output_format_prompt: string = `\nYou are to output the following in json format: ${JSON.stringify(
+    let output_format_prompt: string = `\nYou are to output ${
+      list_output && "an array of objects in"
+    } the following in json format: ${JSON.stringify(
       output_format
     )}. \nDo not put quotation marks or escape character \\ in the output fields.`;
 
@@ -45,7 +41,7 @@ export async function strict_output(
     }
 
     if (list_input) {
-      output_format_prompt += `\nGenerate a list of json, one json for each input element.`;
+      output_format_prompt += `\nGenerate an array of json, one json for each input element.`;
     }
 
     const response = await openai.chat.completions.create({
@@ -53,15 +49,15 @@ export async function strict_output(
       model: model,
       messages: [
         {
-          role: "system",
+          role: 'system',
           content: system_prompt + output_format_prompt + error_msg,
         },
-        { role: "user", content: user_prompt.toString() },
+        { role: 'user', content: user_prompt.toString() },
       ],
     });
 
     let res: string =
-      response.choices[0].message?.content?.replace(/'/g, '"') ?? "";
+      response.choices[0].message?.content?.replace(/'/g, '`') ?? '';
 
     res = res.replace(/(\w)"(\w)/g, "$1'$2");
 
@@ -78,9 +74,7 @@ export async function strict_output(
       let output: any = JSON.parse(res);
 
       if (list_input) {
-        if (!Array.isArray(output)) {
-          throw new Error("Output format not in a list of json");
-        }
+        output = Array.isArray(output) ? output : [output];
       } else {
         output = [output];
       }
@@ -97,15 +91,12 @@ export async function strict_output(
 
           if (Array.isArray(output_format[key])) {
             const choices = output_format[key] as string[];
-            
             if (Array.isArray(output[index][key])) {
               output[index][key] = output[index][key][0];
             }
-
             if (!choices.includes(output[index][key]) && default_category) {
               output[index][key] = default_category;
             }
-            
             if (output[index][key].includes(":")) {
               output[index][key] = output[index][key].split(":")[0];
             }
@@ -114,7 +105,6 @@ export async function strict_output(
 
         if (output_value_only) {
           output[index] = Object.values(output[index]);
-          
           if (output[index].length === 1) {
             output[index] = output[index][0];
           }
@@ -125,7 +115,7 @@ export async function strict_output(
     } catch (e) {
       error_msg = `\n\nResult: ${res}\n\nError message: ${e}`;
       console.log("An exception occurred:", e);
-      console.log("Current invalid json format:", res);
+      console.log("Current invalid json format ", res);
     }
   }
 

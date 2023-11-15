@@ -1,9 +1,9 @@
 import { z } from "zod";
 import axios from "axios";
+import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/db";
-import { auth } from "@clerk/nextjs";
 
 const quizCreationSchema = z.object({
   topic: z
@@ -56,13 +56,15 @@ export async function POST(
     });
 
     const { data } = await axios.post(
-      "/api/quiz/questions",
+      `${process.env.API_URL as string}/api/quiz/questions`,
       {
         amount,
         topic,
         type,
       }
     );
+
+    console.log(data);
 
     if (type === "mcq") {
       type mcqQuestion = {
@@ -81,6 +83,7 @@ export async function POST(
           question.option3,
           question.answer,
         ].sort(() => Math.random() - 0.5);
+        
         return {
           question: question.question,
           answer: question.answer,
@@ -98,6 +101,7 @@ export async function POST(
         question: string;
         answer: string;
       };
+      
       await prisma.question.createMany({
         data: data.questions.map((question: openQuestion) => {
           return {
@@ -114,6 +118,6 @@ export async function POST(
 
   } catch (error) {
     console.log("[Quiz/GAME]", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return new NextResponse(error as string, { status: 500 });
   }
 }

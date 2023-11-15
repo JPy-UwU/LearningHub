@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 import { strict_output } from "@/lib/openai";
@@ -10,23 +9,8 @@ const questionsSchema = z.object({
   type: z.enum(["mcq", "open_ended"]),
 });
 
-const checkAnswerSchema = z.object({
-  userInput: z.string(),
-  questionId: z.string(),
-});
-
-const endGameSchema = z.object({
-  gameId: z.string(),
-});
-
 export async function POST(req: Request, res: Response) {
   try {
-    const { userId } = auth();
-
-    if (userId) {
-      return new Response("Unauthorized", { status: 401 });
-    }
-
     const body = await req.json();
     const { amount, topic, type } = questionsSchema.parse(body);
     let questions: any;
@@ -40,7 +24,7 @@ export async function POST(req: Request, res: Response) {
         {
           question: "question",
           answer: "answer with max length of 15 words",
-        }
+        },
       );
     } else if (type === "mcq") {
       questions = await strict_output(

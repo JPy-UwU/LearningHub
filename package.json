@@ -28,12 +28,14 @@
     "card": "^2.5.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "date-fns": "^2.30.0",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.12",
+    "keyword-extractor": "^0.0.28",
     "lucide-react": "^0.279.0",
     "next": "^13.5.5",
     "next-auth": "^4.23.2",
-    "openai": "^4.14.2",
+    "openai": "^4.17.4",
     "postcss": "8.4.30",
     "radix-ui": "^1.0.1",
     "react": "18.2.0",
@@ -47,6 +49,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "encoding": "^0.1.13",
     "prisma": "^5.4.2"
   }
 }
