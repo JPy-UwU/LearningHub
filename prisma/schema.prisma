@@ -1,11 +1,12 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 model Course {
@@ -25,6 +26,7 @@ model Course {
   category    Category?    @relation(fields: [categoryId], references: [id])
 
   @@index([categoryId])
+  @@fulltext([title])
 }
 
 model Category {
