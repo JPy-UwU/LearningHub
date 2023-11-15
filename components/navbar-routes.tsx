@@ -7,6 +7,7 @@ import Link from "next/link";
 
 import { Button } from "./ui/button";
 import { isAdmin } from "@/lib/admin";
+import { SearchInput } from "./search-input";
 
 const NavbarRoutes = () => {
   const { userId } = useAuth();
@@ -17,8 +18,15 @@ const NavbarRoutes = () => {
 
   const isAdminPage = pathname?.startsWith("/admin");
   const isPlayerPage = pathname?.includes("/chapter");
+  const isBrowsePage = pathname === "/browse";
 
   return (
+    <>
+    {isBrowsePage && (
+      <div className="hidden md:block">
+        <SearchInput />
+      </div>
+    )}
     <div className="flex gap-2 ml-auto">
       {isAdminPage || isPlayerPage ?  (
         <Link href="/dashboard">
@@ -36,6 +44,7 @@ const NavbarRoutes = () => {
       ) : null}
       <UserButton afterSignOutUrl="/" />
     </div>
+    </>
   );
 }
  
