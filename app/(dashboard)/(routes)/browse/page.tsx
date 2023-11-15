@@ -1,9 +1,10 @@
-import { db } from "@/lib/db";
-import { SearchInput } from "@/components/search-input";
-import { Categories } from "./_components/categories";
-import { getCourses } from "@/actions/get-courses";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+
+import { db } from "@/lib/db";
+import { Categories } from "./_components/categories";
+import { SearchInput } from "@/components/search-input";
+import { getCourses } from "@/actions/get-courses";
 import { CoursesList } from "@/components/courses-list";
 
 interface BrowsePageProps{
@@ -19,7 +20,7 @@ const BrowsePage = async ({
   const { userId } = auth();
 
   if (!userId){
-    return redirect("/");
+    return redirect("/sign-in");
   }
 
   const categories = await db.category.findMany({
