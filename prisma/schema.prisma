@@ -113,21 +113,23 @@ model Game {
   timeStarted DateTime
   topic       String
   timeEnded   DateTime?
-  gameType    Game_gameType
+  gameType    GameType
+  questions   Question[]
 
   @@index([userId], map: "userId")
 }
 
 model Question {
-  id                String                @id
+  id                String   @id @default(cuid())
   gameId            String
   question          String
   answer            String
   options           Json?
   percentageCorrect Float?
   isCorrect         Boolean?
-  questionType      Question_questionType
+  questionType      GameType
   userAnswers       String?
+  game              Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
   @@index([gameId], map: "gameId")
 }
@@ -138,12 +140,7 @@ model topic_count {
   count Int
 }
 
-enum Game_gameType {
-  mcq
-  open_ended
-}
-
-enum Question_questionType {
+enum GameType {
   mcq
   open_ended
 }
