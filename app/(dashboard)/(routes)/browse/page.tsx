@@ -2,12 +2,13 @@ import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
-import { Categories } from "./_components/categories";
 import { SearchInput } from "@/components/search-input";
 import { getCourses } from "@/actions/get-courses";
 import { CoursesList } from "@/components/courses-list";
 
-interface BrowsePageProps{
+import { Categories } from "./_components/categories";
+
+interface BrowsePageProps {
   searchParams: {
     title: string;
     categoryId: string;
@@ -19,7 +20,7 @@ const BrowsePage = async ({
 }: BrowsePageProps) => {
   const { userId } = auth();
 
-  if (!userId){
+  if (!userId) {
     return redirect("/sign-in");
   }
 
@@ -37,16 +38,16 @@ const BrowsePage = async ({
   return (
     <>
       <div className="px-6 pt-6 md:hidden md:mb-0 block">
-      <SearchInput />
+        <SearchInput />
       </div>
-    <div className="p-6 space-y-4">
-      <Categories 
-      items={categories}
-      />
-      <CoursesList items={courses}/>
-    </div>
+      <div className="p-6 space-y-4">
+        <Categories
+          items={categories}
+        />
+        <CoursesList items={courses} />
+      </div>
     </>
-  );
+   );
 }
  
 export default BrowsePage;
