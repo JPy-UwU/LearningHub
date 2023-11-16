@@ -2,7 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import React from "react";
-// import D3WordCloud from "react-d3-cloud";
+import ReactWordcloud from 'react-wordcloud';
+
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/animations/scale.css';
 
 const fontSizeMapper = (word: { value: number }) =>
   Math.log2(word.value) * 5 + 16;
@@ -28,6 +31,27 @@ const WordCloud = ({
           router.push("/quiz?topic=" + d.text);
         }}
       /> */}
+      <
+        ReactWordcloud
+        words={formattedTopics}
+        options={{
+          fontSizes: [16, 80],
+          rotations: 0,
+          rotationAngles: [0, 0],
+          enableTooltip: true,
+          deterministic: true,
+          padding: 1,
+          fontFamily: "Times",
+          spiral: "rectangular",
+          scale: "log",
+          transitionDuration: 1000,
+        }}
+        callbacks={{
+          onWordClick: (word) => {
+            router.push("/quiz?topic=" + word.text);
+          },
+        }}
+      />
     </>
   );
 };

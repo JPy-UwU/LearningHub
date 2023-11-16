@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-// import WordCloud from "./word-cloud";
+import WordCloud from "./word-cloud";
 
 const HotTopicsCard = async () => {
   const topics = await prisma.topic_count.findMany({});
@@ -31,7 +31,7 @@ const HotTopicsCard = async () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="pl-2">
-        {/* <WordCloud formattedTopics={formattedTopics} /> */}
+        <WordCloud formattedTopics={formattedTopics} />
       </CardContent>
     </Card>
   );
