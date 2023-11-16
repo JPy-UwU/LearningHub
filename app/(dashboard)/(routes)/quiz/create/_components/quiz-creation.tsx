@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import { z } from "zod";
-import axios, { AxiosError } from "axios";
+import Link from "next/link";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BookOpen, CopyCheck } from "lucide-react";
@@ -21,7 +22,6 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import { Separator } from "@/components/ui/separator";
 import {
   Card,
@@ -45,18 +45,22 @@ const quizCreationSchema = z.object({
   amount: z.number().min(1).max(10),
 });
 
-const QuizCreation = ({
-  topic: topicParam 
-}: {
-  topic: string;
-}) => {
+const QuizCreation = ({ topic: topicParam }: { topic: string }) => {
   const router = useRouter();
   const [showLoader, setShowLoader] = useState(false);
   const [finishedLoading, setFinishedLoading] = useState(false);
 
   const { mutate: getQuestions, isPending } = useMutation({
-    mutationFn: async ({ amount, topic, type }: z.infer<typeof quizCreationSchema>) => {
-      const response = await axios.post("/api/quiz/game", { amount, topic, type });
+    mutationFn: async ({
+      amount,
+      topic,
+      type,
+    }: z.infer<typeof quizCreationSchema>) => {
+      const response = await axios.post("/api/quiz/game", {
+        amount,
+        topic,
+        type,
+      });
       return response.data;
     },
   });
@@ -70,7 +74,7 @@ const QuizCreation = ({
     },
   });
 
-  const onSubmit = async (data:  z.infer<typeof quizCreationSchema>) => {
+  const onSubmit = async (data: z.infer<typeof quizCreationSchema>) => {
     setShowLoader(true);
     getQuestions(data, {
       onError: (error) => {
@@ -93,6 +97,8 @@ const QuizCreation = ({
   };
   form.watch();
 
+  const { isSubmitting, isValid } = form.formState;
+
   if (showLoader) {
     return <LoadingQuestions finished={finishedLoading} />;
   }
@@ -101,9 +107,7 @@ const QuizCreation = ({
     <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">
-            Quiz Creation
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold">Quiz Creation</CardTitle>
           <CardDescription>Choose a topic</CardDescription>
         </CardHeader>
         <CardContent>
@@ -180,9 +184,16 @@ const QuizCreation = ({
                   <BookOpen className="w-4 h-4 mr-2" /> Open Ended
                 </Button>
               </div>
-              <Button disabled={isPending} type="submit">
-                Submit
-              </Button>
+              <div className="flex items-center gap-x-2">
+                <Link href="/quiz">
+                  <Button type="button" variant="ghost">
+                    Cancel
+                  </Button>
+                </Link>
+                <Button type="submit" disabled={!isValid || isSubmitting}>
+                  Continue
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

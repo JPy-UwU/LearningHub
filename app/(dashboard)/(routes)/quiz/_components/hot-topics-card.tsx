@@ -27,7 +27,7 @@ const HotTopicsCard = async () => {
           Hot Topics
         </CardTitle>
         <CardDescription className="text-sm text-slate-600 text-muted-foreground">
-          Click on a topic to start a quiz on it.
+          See what topics are trending in the community.
         </CardDescription>
       </CardHeader>
       <CardContent className="pl-2">
