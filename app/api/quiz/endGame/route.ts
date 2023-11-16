@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { NextResponse } from "next/server";
 
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/db";
 
 const endGameSchema = z.object({
   gameId: z.string(),
@@ -12,7 +12,7 @@ export async function POST(req: Request, res: Response) {
     const body = await req.json();
     const { gameId } = endGameSchema.parse(body);
 
-    const game = await prisma.game.findUnique({
+    const game = await db.game.findUnique({
       where: {
         id: gameId,
       },
@@ -22,7 +22,7 @@ export async function POST(req: Request, res: Response) {
       return NextResponse.json("Game not found", { status: 404 });
     }
 
-    await prisma.game.update({
+    await db.game.update({
       where: {
         id: gameId,
       },

@@ -3,7 +3,7 @@ import axios from "axios";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/db";
 
 const quizCreationSchema = z.object({
   topic: z
@@ -31,7 +31,7 @@ export async function POST(
     const body = await req.json();
     const { topic, type, amount } = quizCreationSchema.parse(body);
     
-    const game = await prisma.game.create({
+    const game = await db.game.create({
       data: {
         gameType: type,
         timeStarted: new Date(),
@@ -40,7 +40,7 @@ export async function POST(
       },
     });
 
-    await prisma.topic_count.upsert({
+    await db.topic_count.upsert({
       where: {
         topic,
       },
@@ -93,7 +93,7 @@ export async function POST(
         };
       });
 
-      await prisma.question.createMany({
+      await db.question.createMany({
         data: manyData,
       });
     } else if (type === "open_ended") {
@@ -102,7 +102,7 @@ export async function POST(
         answer: string;
       };
       
-      await prisma.question.createMany({
+      await db.question.createMany({
         data: data.questions.map((question: openQuestion) => {
           return {
             question: question.question,

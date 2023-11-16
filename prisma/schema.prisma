@@ -108,7 +108,7 @@ model StripeCustomer {
 }
 
 model Game {
-  id          String        @id
+  id          String     @id @default(cuid())
   userId      String
   timeStarted DateTime
   topic       String
@@ -135,7 +135,7 @@ model Question {
 }
 
 model topic_count {
-  id    String @id
+  id    String @id @default(cuid())
   topic String @unique
   count Int
 }

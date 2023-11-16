@@ -5,11 +5,6 @@ import { differenceInSeconds } from "date-fns";
 import { formatTimeDelta } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-type Props = {
-  timeEnded: Date;
-  timeStarted: Date;
-};
-
 const TimeTakenCard = ({ 
   timeEnded, 
   timeStarted 

@@ -1,7 +1,7 @@
 import React from "react";
+import { Award, Trophy } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Award, Trophy } from "lucide-react";
 
 const ResultsCard = ({ 
   accuracy 

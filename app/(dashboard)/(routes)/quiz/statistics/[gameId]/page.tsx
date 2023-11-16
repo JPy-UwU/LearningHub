@@ -4,7 +4,7 @@ import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { LucideLayoutDashboard } from "lucide-react";
 
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/db";
 import { buttonVariants } from "@/components/ui/button";
 import ResultsCard from "../_components/result-card";
 import AccuracyCard from "../_components/accuracy-card";
@@ -25,7 +25,7 @@ const Statistics = async ({
   if (!userId) {
     return redirect("/sign-in");
   }
-  const game = await prisma.game.findUnique({
+  const game = await db.game.findUnique({
     where: { 
       id: gameId 
     },

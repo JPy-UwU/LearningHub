@@ -2,7 +2,7 @@ import { z } from "zod";
 import { NextResponse } from "next/server";
 import stringSimilarity from "string-similarity";
 
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/db";
 
 const checkAnswerSchema = z.object({
   userInput: z.string(),
@@ -13,7 +13,7 @@ export async function POST(req: Request, res: Response) {
   try {
     const body = await req.json();
     const { questionId, userInput } = checkAnswerSchema.parse(body);
-    const question = await prisma.question.findUnique({
+    const question = await db.question.findUnique({
       where: {
         id: questionId,
       },
@@ -22,7 +22,7 @@ export async function POST(req: Request, res: Response) {
     if (!question) {
       return NextResponse.json({ message: "Question not found" }, { status: 404 });
     }
-    await prisma.question.update({
+    await db.question.update({
       where: {
         id: questionId,
       },
@@ -34,7 +34,7 @@ export async function POST(req: Request, res: Response) {
     if (question.questionType === "mcq") {
       const isCorrect =
         question.answer.toLowerCase().trim() === userInput.toLowerCase().trim();
-      await prisma.question.update({
+      await db.question.update({
         where: { 
           id: questionId 
         },
@@ -50,7 +50,7 @@ export async function POST(req: Request, res: Response) {
       );
 
       percentageSimilar = Math.round(percentageSimilar * 100);
-      await prisma.question.update({
+      await db.question.update({
         where: { 
           id: questionId 
         },

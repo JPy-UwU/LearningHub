@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { Clock, CopyCheck, Edit2 } from "lucide-react";
 
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/db";
 
 type Props = {
   limit: number;
@@ -10,7 +10,7 @@ type Props = {
 };
 
 const HistoryComponent = async ({ limit, userId }: Props) => {
-  const games = await prisma.game.findMany({
+  const games = await db.game.findMany({
     take: limit,
     where: {
       userId,

@@ -2,7 +2,7 @@ import React from "react";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/db";
 import MCQ from "../../_components/mcq";
 
 type Props = {
@@ -18,7 +18,7 @@ const MCQPage = async ({ params: { gameId } }: Props) => {
     return redirect("/sign-in");
   }
 
-  const game = await prisma.game.findUnique({
+  const game = await db.game.findUnique({
     where: {
       id: gameId,
     },

@@ -1,12 +1,12 @@
 import React from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs";
 import { LucideLayoutDashboard } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import HistoryComponent from "./_components/history";
-import { auth } from "@clerk/nextjs";
 
 type Props = {};
 

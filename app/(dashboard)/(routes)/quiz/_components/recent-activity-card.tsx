@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/db";
 import History from "./history";
 
 type Props = {};
@@ -20,7 +20,7 @@ const RecentActivityCard = async (props: Props) => {
   if (!userId) {
     return redirect("/sign-in");
   }
-  const games_count = await prisma.game.count({
+  const games_count = await db.game.count({
     where: {
       userId,
     },

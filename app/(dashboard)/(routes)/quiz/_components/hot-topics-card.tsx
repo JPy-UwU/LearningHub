@@ -1,5 +1,5 @@
 import React from "react";
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/db";
 
 
 import {
@@ -12,7 +12,7 @@ import {
 import WordCloud from "./word-cloud";
 
 const HotTopicsCard = async () => {
-  const topics = await prisma.topic_count.findMany({});
+  const topics = await db.topic_count.findMany({});
   const formattedTopics = topics.map((topic) => {
     return {
       text: topic.topic,

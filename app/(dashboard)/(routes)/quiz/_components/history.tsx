@@ -2,7 +2,7 @@ import { Clock, CopyCheck, Edit2 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/db";
 
 const History = async ({
   limit, 
@@ -11,7 +11,7 @@ const History = async ({
   limit: number;
   userId: string;
 }) => {
-  const games = await prisma.game.findMany({
+  const games = await db.game.findMany({
     take: limit,
     where: {
       userId,
