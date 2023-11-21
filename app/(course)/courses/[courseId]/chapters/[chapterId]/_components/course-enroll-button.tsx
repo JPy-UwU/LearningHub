@@ -20,7 +20,7 @@ export const CourseEnrollButton = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const onClick = async () => {
-    try{
+    try {
       setIsLoading(true);
 
       const response = await axios.post(`/api/courses/${courseId}/checkout`)
