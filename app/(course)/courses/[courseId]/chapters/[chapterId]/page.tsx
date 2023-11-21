@@ -1,11 +1,15 @@
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import { File } from "lucide-react";
 
 import { getChapter } from "@/actions/get-chapter";
 import { Banner } from "@/components/banner";
+import { Separator } from "@/components/ui/separator";
+import { Preview } from "@/components/preview";
 
 import { VideoPlayer } from "./_components/video-player";
 import { CourseEnrollButton } from "./_components/course-enroll-button";
+
 
 const ChapterIdPage = async ({
   params
@@ -80,10 +84,32 @@ const ChapterIdPage = async ({
               price={course.price!}
               />
             )}
-
           </div>
+          <Separator />
+          <div>
+            <Preview value={chapter.description!}/>
+          </div>
+          {!!attachements.length &&(
+            <>
+              <Separator />
+              <div className="p-4">
+                {attachements.map((attachements) => (
+                  <a 
+                    href={attachements.url}
+                    target="_blank"
+                    key={attachements.id}
+                    className="flex items-center p-3 w-full bg-sky-200 border text-sky-700 rounded-md hover:underline"
+                  >
+                    <File />
+                    <p className="line-clamp-1">
+                      {attachements.name}
+                    </p>
+                  </a>
+                ))}
+              </div>
+            </>
+          )}
         </div>
-
       </div>
     </div>
   );
