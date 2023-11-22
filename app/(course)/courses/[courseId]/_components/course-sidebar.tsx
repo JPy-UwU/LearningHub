@@ -1,6 +1,5 @@
-
 import { auth } from "@clerk/nextjs";
-import { Chapter, Course, UserProgress } from "@prisma/client"
+import { Chapter, Course, UserProgress } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
@@ -10,14 +9,14 @@ interface CoureSidebarProps {
   course: Course & {
     chapters: (Chapter & {
       userProgress: UserProgress[] | null;
-    })[]
+    })[];
   };
   progressCount: number;
-};
+}
 
 export const CourseSidebar = async ({
   course,
-  progressCount
+  progressCount,
 }: CoureSidebarProps) => {
   const { userId } = auth();
 
@@ -25,22 +24,19 @@ export const CourseSidebar = async ({
     return redirect("/sign-in");
   }
 
-
   const purchase = await db.purchase.findUnique({
     where: {
       userId_courseId: {
         userId,
         courseId: course.id,
-      }
-    }
+      },
+    },
   });
 
   return (
     <div className="h-full bordee-r flex flex-col overflow-y-auto shadow-sm">
       <div className="p-8 flex flex-col border-b">
-        <h1 className="font-semibold">
-          {course.title}
-        </h1>
+        <h1 className="font-semibold">{course.title}</h1>
         {/* Check purchase and add progress */}
       </div>
       <div className="flex flex-col w-full">
@@ -56,5 +52,5 @@ export const CourseSidebar = async ({
         ))}
       </div>
     </div>
-  )
-}
+  );
+};

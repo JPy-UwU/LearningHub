@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { isServer } from "@/lib/utils";
 
 export default function useWindowSize() {
