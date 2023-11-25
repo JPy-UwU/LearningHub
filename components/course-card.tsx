@@ -59,7 +59,7 @@ export const CourseCard = ({
             />
           ) : (
             <p className="text-md md:text-sm font-medium text-slate-700">
-              {formatPrice(price)}
+              {price === 0 ? "Free" : formatPrice(price)}
             </p>
           )}
         </div>
