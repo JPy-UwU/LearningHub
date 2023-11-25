@@ -6,7 +6,7 @@ interface GetChapterProps {
   userId: string;
   courseId: string;
   chapterId: string;
-}
+};
 
 export const getChapter = async ({
   userId,
@@ -19,25 +19,25 @@ export const getChapter = async ({
         userId_courseId: {
           userId,
           courseId,
-        },
-      },
+        }
+      }
     });
 
     const course = await db.course.findUnique({
       where: {
-        id: courseId,
         isPublished: true,
+        id: courseId,
       },
       select: {
         price: true,
-      },
+      }
     });
 
     const chapter = await db.chapter.findUnique({
       where: {
         id: chapterId,
         isPublished: true,
-      },
+      }
     });
 
     if (!chapter || !course) {
@@ -45,14 +45,14 @@ export const getChapter = async ({
     }
 
     let muxData = null;
-    let attachements: Attachment[] = [];
+    let attachments: Attachment[] = [];
     let nextChapter: Chapter | null = null;
 
     if (purchase) {
-      attachements = await db.attachment.findMany({
+      attachments = await db.attachment.findMany({
         where: {
-          courseId: courseId,
-        },
+          courseId: courseId
+        }
       });
     }
 
@@ -60,7 +60,7 @@ export const getChapter = async ({
       muxData = await db.muxData.findUnique({
         where: {
           chapterId: chapterId,
-        },
+        }
       });
 
       nextChapter = await db.chapter.findFirst({
@@ -69,11 +69,11 @@ export const getChapter = async ({
           isPublished: true,
           position: {
             gt: chapter?.position,
-          },
+          }
         },
         orderBy: {
           position: "asc",
-        },
+        }
       });
     }
 
@@ -82,15 +82,15 @@ export const getChapter = async ({
         userId_chapterId: {
           userId,
           chapterId,
-        },
-      },
+        }
+      }
     });
 
     return {
       chapter,
       course,
       muxData,
-      attachements,
+      attachments,
       nextChapter,
       userProgress,
       purchase,
@@ -101,10 +101,10 @@ export const getChapter = async ({
       chapter: null,
       course: null,
       muxData: null,
-      attachments: null,
+      attachments: [],
       nextChapter: null,
       userProgress: null,
       purchase: null,
-    };
+    }
   }
-};
+}

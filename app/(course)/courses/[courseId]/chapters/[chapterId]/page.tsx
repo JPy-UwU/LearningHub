@@ -6,25 +6,27 @@ import { getChapter } from "@/actions/get-chapter";
 import { Banner } from "@/components/banner";
 import { Separator } from "@/components/ui/separator";
 import { Preview } from "@/components/preview";
+
 import { VideoPlayer } from "./_components/video-player";
 import { CourseEnrollButton } from "./_components/course-enroll-button";
+import CourseProgressButton from "./_components/course-progress-button";
 
 const ChapterIdPage = async ({
-  params,
+  params
 }: {
-  params: { courseId: string; chapterId: string };
+  params: { courseId: string; chapterId: string }
 }) => {
   const { userId } = auth();
-
+  
   if (!userId) {
-    return redirect("/sign-in");
-  }
+    return redirect("/");
+  } 
 
   const {
     chapter,
     course,
     muxData,
-    attachements,
+    attachments,
     nextChapter,
     userProgress,
     purchase,
@@ -35,16 +37,20 @@ const ChapterIdPage = async ({
   });
 
   if (!chapter || !course) {
-    return redirect("/sign-in");
+    return redirect("/")
   }
+
 
   const isLocked = !chapter.isFree && !purchase;
   const completeOnEnd = !!purchase && !userProgress?.isCompleted;
 
-  return (
+  return ( 
     <div>
       {userProgress?.isCompleted && (
-        <Banner variant="success" label="You already completed this chapter." />
+        <Banner
+          variant="success"
+          label="You already completed this chapter."
+        />
       )}
       {isLocked && (
         <Banner
@@ -57,7 +63,7 @@ const ChapterIdPage = async ({
           <VideoPlayer
             chapterId={params.chapterId}
             title={chapter.title}
-            courseId={params.chapterId}
+            courseId={params.courseId}
             nextChapterId={nextChapter?.id}
             playbackId={muxData?.playbackId!}
             isLocked={isLocked}
@@ -70,9 +76,12 @@ const ChapterIdPage = async ({
               {chapter.title}
             </h2>
             {purchase ? (
-              <div>
-                {/* TODO: Add CourseProgress Button */}
-              </div>
+              <CourseProgressButton
+                chapterId={params.chapterId}
+                courseId={params.courseId}
+                nextChapterId={nextChapter?.id}
+                isCompleted={!!userProgress?.isCompleted}
+              />
             ) : (
               <CourseEnrollButton
                 courseId={params.courseId}
@@ -84,20 +93,20 @@ const ChapterIdPage = async ({
           <div>
             <Preview value={chapter.description!} />
           </div>
-          {!!attachements.length && (
+          {!!attachments.length && (
             <>
               <Separator />
               <div className="p-4">
-                {attachements.map((attachements) => (
-                  <a
-                    href={attachements.url}
+                {attachments.map((attachment) => (
+                  <a 
+                    href={attachment.url}
                     target="_blank"
-                    key={attachements.id}
+                    key={attachment.id}
                     className="flex items-center p-3 w-full bg-sky-200 border text-sky-700 rounded-md hover:underline"
                   >
                     <File />
                     <p className="line-clamp-1">
-                      {attachements.name}
+                      {attachment.name}
                     </p>
                   </a>
                 ))}
@@ -107,7 +116,7 @@ const ChapterIdPage = async ({
         </div>
       </div>
     </div>
-  );
-};
-
+   );
+}
+ 
 export default ChapterIdPage;
