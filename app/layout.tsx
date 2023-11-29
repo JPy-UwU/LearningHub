@@ -6,6 +6,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 
 import ToasterProvider from '@/components/provider/toaster-provider'
 import { ConfettiProvider } from '@/components/provider/confetti-provider'
+import { CrispProvider } from '@/components/provider/crisp-provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,7 +23,8 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-      <link rel="icon" type="image/png" href="/logo.png" />
+        <link rel="icon" type="image/png" href="/logo.png" />
+        <CrispProvider />
         <body className={inter.className}>
           <ConfettiProvider />
           <ToasterProvider />
