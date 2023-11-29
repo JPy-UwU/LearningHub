@@ -16,7 +16,7 @@ const LandingLayout = ({
             alt="Github"
             width={50}
             height={50}
-            className="fixed bottom-5 left-5 h-20 w-20 overflow-clip z-50 ml-2"
+            className="fixed bottom-5 left-5 h-10 w-10 overflow-clip z-50 ml-2"
           />
         </Link>
     </div>
