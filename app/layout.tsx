@@ -22,6 +22,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <link rel="icon" type="image/png" href="/logo.png" />
         <body className={inter.className}>
           <ConfettiProvider />
           <ToasterProvider />
