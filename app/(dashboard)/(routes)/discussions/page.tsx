@@ -62,14 +62,34 @@ const DiscussionsPage = () => {
   };
   const createChannel = async () => {
     try {
-      const allUserIds = await fetchAllUserIds(); // Wait for fetchAllUserIds to complete
-      const channel = chatClient.channel(
-        "messaging",
-        channelName.replace(/\s/g, ""),
-        {
-          name: channelName,
-          members: [...allUserIds],
-        }
+      // Trim the channelName to remove leading and trailing whitespaces
+    const trimmedChannelName = channelName.trim();
+
+    // Check if the trimmedChannelName is empty
+    if (!trimmedChannelName) {
+      toast.error("Please type an actual question");
+      return;
+    }
+
+     // Check if a channel with the same name already exists
+     const existingChannel = await chatClient.queryChannels(
+      { name: trimmedChannelName },
+      { }
+    );
+
+    if (existingChannel.length > 0) {
+      toast.error("This question already exists. Please use the channel search");
+      return;
+    }
+
+    const allUserIds = await fetchAllUserIds(); // Wait for fetchAllUserIds to complete
+    const channel = chatClient.channel(
+      "messaging",
+      channelName.replace(/\s/g, ""),
+      {
+        name: channelName,
+        members: [...allUserIds],
+      }
       );
 
       await channel.watch();
