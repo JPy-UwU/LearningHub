@@ -45,8 +45,7 @@ const LoadingQuestions = ({
 
   return (
     <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[70vw] md:w-[60vw] flex flex-col items-center">
-      {/* TODO: add loading asset */}
-      <Image src={"/loading.gif"} width={400} height={400} alt="loading" />
+      <Image src={"/loading.svg"} width={400} height={400} alt="loading" />
       <Progress value={progress} className="w-full mt-4" />
       <h1 className="mt-2 text-xl">{loadingText}</h1>
     </div>
