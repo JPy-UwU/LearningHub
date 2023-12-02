@@ -102,7 +102,7 @@ const OpenEnded = ({
         toast.error("Something went wrong");
       },
     });
-  }, [checkAnswer, questionIndex, toast, endGame, game.questions.length]);
+  }, [checkAnswer, questionIndex, endGame, game.questions.length]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

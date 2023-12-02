@@ -5,7 +5,7 @@ interface MenuBarProps{
   onUserMenuClick: () => void,
 }
 
-export default function ({onUserMenuClick}: MenuBarProps) {
+export default function MenuBar ({onUserMenuClick}: MenuBarProps) {
   return (
     <div className="p-3 flex items-center justify-between bg-white border-e border-e-[#DBDDE1]">
       <div className="flex gap-6">

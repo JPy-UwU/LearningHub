@@ -107,7 +107,7 @@ const MCQ = ({
         setQuestionIndex((questionIndex) => questionIndex + 1);
       },
     });
-  }, [checkAnswer, questionIndex, game.questions.length, toast, endGame]);
+  }, [checkAnswer, questionIndex, game.questions.length, endGame]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
